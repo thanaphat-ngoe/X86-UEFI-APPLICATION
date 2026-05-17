@@ -1,0 +1,9 @@
+services:
+  uefi-dev:
+    image: ubuntu:22.04
+    platform: linux/amd64
+    container_name: uefi_edk2_lab
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sleep infinity
