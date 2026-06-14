@@ -21,16 +21,18 @@ fi
 
 if [ ! -f "/usr/share/ovmf/OVMF.fd" ]; then
     echo "❌ Cannot find OVMF Firmware (UEFI BIOS)"
-    echo "💡 Please install it with: sudo apt install ovmf"
     exit 1
 fi
+
+make clean
+make all
 
 echo "🚀 Running QEMU-X86-64 Emulation"
 
 qemu-system-x86_64 \
   	-machine q35 \
     -bios /usr/share/ovmf/OVMF.fd \
-    -m 2G \
+    -m 4G \
     -vga std \
     -device qemu-xhci,id=usb_bus \
     -drive file=fat:rw:./VirtualUSB,format=raw,if=none,id=drv_usb \
