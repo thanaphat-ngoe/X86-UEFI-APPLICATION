@@ -5,32 +5,31 @@
 # ==========================================
 
 if [ ! -f "nvme0.img" ]; then
-    echo "❌ Cannot find nvme0.img, creating a new 10GB image..."
+    echo "Cannot find nvme0.img, creating a new 10GB image..."
     qemu-img create -f raw nvme0.img 10G
 fi
 
 if [ ! -f "nvme1.img" ]; then
-    echo "❌ Cannot find nvme1.img, creating a new 10GB image..."
+    echo "Cannot find nvme1.img, creating a new 10GB image..."
     qemu-img create -f raw nvme1.img 10G
 fi
 
 if [ ! -d "VirtualUSB/EFI/BOOT" ]; then
-    echo "❌ Cannot find VirtualUSB/EFI/BOOT directory"
+    echo "Cannot find VirtualUSB/EFI/BOOT directory"
     exit 1
 fi
 
 if [ ! -f "/usr/share/ovmf/OVMF.fd" ]; then
-    echo "❌ Cannot find OVMF Firmware (UEFI BIOS)"
+    echo "Cannot find OVMF Firmware (UEFI BIOS)"
     exit 1
 fi
 
 make clean
 make all
 
-echo "🚀 Running QEMU-X86-64 Emulation"
-
 qemu-system-x86_64 \
   	-machine q35 \
+	-smp 4 \
     -bios /usr/share/ovmf/OVMF.fd \
     -m 4G \
     -vga std \
@@ -40,4 +39,6 @@ qemu-system-x86_64 \
     -drive file=nvme0.img,format=raw,if=none,id=drv_nvme0 \
     -device nvme,drive=drv_nvme0,serial=nvme_serial_0 \
     -drive file=nvme1.img,format=raw,if=none,id=drv_nvme1 \
-    -device nvme,drive=drv_nvme1,serial=nvme_serial_1
+    -device nvme,drive=drv_nvme1,serial=nvme_serial_1 \
+	-netdev user,id=net0 \
+    -device e1000e,netdev=net0 \

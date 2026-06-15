@@ -3,6 +3,10 @@
 
 #include "EFI_SYSTEM_TABLE.h"
 
+#define EFI_SUCCESS 0
+#define EFI_UNSUPPORTED 3
+#define EFI_DEVICE_ERROR 7
+
 // typedef struct {
 //     UINT32 TimeLow;
 //     UINT16 TimeMid;
